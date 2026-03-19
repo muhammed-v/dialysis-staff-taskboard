@@ -1,8 +1,14 @@
+import { useState } from 'react';
 import { PatientRow } from './PatientRow';
 import { usePatients } from '../hooks/usePatients';
+import { Filters } from './Filters';
+import { TimeFilter, RoleFilter } from '../utils/filterTasks';
 
 export const TaskBoard = () => {
   const { data: patients, isLoading, error } = usePatients();
+  
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
 
   if (isLoading) {
     return (
@@ -38,11 +44,19 @@ export const TaskBoard = () => {
         <p className="text-gray-500 text-sm">Overview of all active and completed tasks across staff roles.</p>
       </div>
 
+      <Filters 
+        timeFilter={timeFilter} 
+        setTimeFilter={setTimeFilter} 
+        roleFilter={roleFilter} 
+        setRoleFilter={setRoleFilter} 
+      />
+
       <div className="flex flex-col gap-8">
         {patients?.map(patient => (
           <PatientRow
             key={patient?.id}
             patient={patient}
+            filterOptions={{ time: timeFilter, role: roleFilter }}
           />
         ))}
       </div>

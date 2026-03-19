@@ -1,16 +1,19 @@
 import { Patient, TaskStatus } from '../types';
 import { TaskColumn } from './TaskColumn';
 import { useTasks } from '../hooks/useTasks';
+import { FilterOptions, filterTasks } from '../utils/filterTasks';
 
 interface PatientRowProps {
   patient: Patient;
+  filterOptions: FilterOptions;
 }
 
-export const PatientRow = ({ patient }: PatientRowProps) => {
+export const PatientRow = ({ patient, filterOptions }: PatientRowProps) => {
   const statuses: TaskStatus[] = ['todo', 'in_progress', 'completed'];
   
   // Fetch tasks dynamically scoped specifically to this patient
-  const { data: tasks, isLoading, error } = useTasks(patient?.id);
+  const { data: rawTasks, isLoading, error } = useTasks(patient?.id);
+  const tasks = rawTasks ? filterTasks(rawTasks, filterOptions) : [];
 
   return (
     <div className="flex flex-col xl:flex-row gap-6 p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
