@@ -38,7 +38,12 @@ export const PatientRow = ({ patient, filterOptions }: PatientRowProps) => {
             {patient?.name?.charAt(0) || '?'}
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-800 leading-tight">{patient?.name || 'Unknown'}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-slate-800 leading-tight">{patient?.name || 'Unknown'}</h2>
+              {tasks.length > 0 && (
+                <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full">{tasks.length}</span>
+              )}
+            </div>
             <p className="text-xs text-slate-400 mt-0.5">
               {patient?.age ? `${patient.age} yrs` : 'Age unknown'} · <span className="text-slate-300">{patient?.id}</span>
             </p>

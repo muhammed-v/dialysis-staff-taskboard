@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createTask, updateTask } from '../api/client';
 import { Task } from '../types';
 import type { CreateTaskInput } from '../api/mockBackend';
+import toast from 'react-hot-toast';
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -15,10 +16,10 @@ export const useCreateTask = () => {
 
     },
     onError: (_err, _newVariables, _context) => {
-
+      toast.error('Failed to create task. Please try again.');
     },
     onSettled: (_data, _error, variables) => {
-
+      if (!_error) toast.success('Task created!');
       queryClient.invalidateQueries({ queryKey: ['tasks', variables.patientId] });
     },
   });
@@ -68,9 +69,10 @@ export const useUpdateTask = () => {
       }
 
       // Show error message as requested
-      alert(`Rollback applied. Failed to update task: ${err.message}`);
+      toast.error(`Failed to update task: ${err.message}. Changes rolled back.`);
     },
     onSettled: (_data, _error, variables) => {
+      if (!_error) toast.success('Task updated!');
       // Always resync with the server strictly as a final guarantee, regardless of success/fail
       queryClient.invalidateQueries({ queryKey: ['tasks', variables.patientId] });
     },
