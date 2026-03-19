@@ -70,9 +70,7 @@ const simulateImperfectData = (task: Task): Task => {
   return t;
 };
 
-// ======================================
 // Exported API Functions
-// ======================================
 
 export const getPatients = async (): Promise<Patient[]> => {
   await simulateDelay();
