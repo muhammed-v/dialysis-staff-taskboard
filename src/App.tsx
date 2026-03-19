@@ -1,11 +1,7 @@
 import Dashboard from './pages/Dashboard'
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
-      <Dashboard />
-    </div>
-  )
+  return <Dashboard />
 }
 
 export default App

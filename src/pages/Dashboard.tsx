@@ -2,8 +2,8 @@ import { TaskBoard } from '../components/TaskBoard'
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-gray-50/50 p-6 md:p-8 w-full max-w-[1600px] mx-auto">
+    <main className="min-h-screen bg-[#f8f9fc] px-6 py-8 lg:px-12 lg:py-10">
       <TaskBoard />
-    </div>
+    </main>
   )
 }

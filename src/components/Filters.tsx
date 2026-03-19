@@ -1,3 +1,4 @@
+import { Filter, Clock } from 'lucide-react';
 import { TimeFilter, RoleFilter } from '../utils/filterTasks';
 
 interface FiltersProps {
@@ -23,13 +24,13 @@ export const Filters = ({ timeFilter, setTimeFilter, roleFilter, setRoleFilter }
   ];
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-200 mb-2">
-      <div className="flex flex-col gap-1.5 flex-1">
-        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Role Provider</label>
-        <select 
-          value={roleFilter} 
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+        <Filter className="h-3.5 w-3.5 text-emerald-500" />
+        <select
+          value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value as RoleFilter)}
-          className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 font-medium transition-colors"
+          className="text-sm bg-transparent text-slate-700 font-medium focus:outline-none cursor-pointer"
         >
           {roles.map(r => (
             <option key={r.value} value={r.value}>{r.label}</option>
@@ -37,12 +38,12 @@ export const Filters = ({ timeFilter, setTimeFilter, roleFilter, setRoleFilter }
         </select>
       </div>
 
-      <div className="flex flex-col gap-1.5 flex-1">
-        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Due Date</label>
-        <select 
-          value={timeFilter} 
+      <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+        <Clock className="h-3.5 w-3.5 text-teal-500" />
+        <select
+          value={timeFilter}
           onChange={(e) => setTimeFilter(e.target.value as TimeFilter)}
-          className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 font-medium transition-colors"
+          className="text-sm bg-transparent text-slate-700 font-medium focus:outline-none cursor-pointer"
         >
           {times.map(t => (
             <option key={t.value} value={t.value}>{t.label}</option>
