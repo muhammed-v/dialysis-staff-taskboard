@@ -7,6 +7,7 @@ interface TaskColumnProps {
 }
 
 export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
+  // Graceful robust dictionary lookup with fallback
   const statusLabels: Record<TaskStatus, string> = {
     todo: 'To Do',
     in_progress: 'In Progress',
@@ -19,20 +20,28 @@ export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
     completed: 'border-l-green-400',
   };
 
+  const label = statusLabels[status] || 'Unknown Status';
+  const borderColor = borderColors[status] || 'border-l-gray-200';
+
+  // Ensure tasks array is robust against undefined mapping
+  const safeTasks = Array.isArray(tasks) ? tasks : [];
+
   return (
     <div className="flex flex-col gap-3 min-w-[280px] flex-1 bg-gray-50 p-4 rounded-xl border border-gray-100">
       <div className="flex items-center gap-2 mb-2">
-        <div className={`h-4 w-1 rounded-full border-l-4 ${borderColors[status]}`} />
+        <div className={`h-4 w-1 rounded-full border-l-4 ${borderColor}`} />
         <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider">
-          {statusLabels[status]} <span className="ml-1 text-gray-400 font-medium">({tasks.length})</span>
+          {label} <span className="ml-1 text-gray-400 font-medium">({safeTasks.length})</span>
         </h3>
       </div>
       
       <div className="flex flex-col gap-3 min-h-[120px]">
-        {tasks.map(task => (
-          <TaskCard key={task.id} task={task} />
+        {safeTasks.map((task, index) => (
+          // Use index fallback if task ID is missing
+          <TaskCard key={task?.id || `fallback-idx-${index}`} task={task} />
         ))}
-        {tasks.length === 0 && (
+        
+        {safeTasks.length === 0 && (
           <div className="flex-1 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg text-gray-400 text-sm italic">
             No tasks
           </div>

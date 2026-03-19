@@ -11,12 +11,14 @@ interface PatientRowProps {
 export const PatientRow = ({ patient, filterOptions }: PatientRowProps) => {
   const statuses: TaskStatus[] = ['todo', 'in_progress', 'completed'];
   
-  // Fetch tasks dynamically scoped specifically to this patient
-  const { data: rawTasks, isLoading, error } = useTasks(patient?.id);
+  // Extract refetch to allow manual retries per patient row
+  const { data: rawTasks, isLoading, error, refetch } = useTasks(patient?.id);
+  
+  // Apply filtering robustly
   const tasks = rawTasks ? filterTasks(rawTasks, filterOptions) : [];
 
   return (
-    <div className="flex flex-col xl:flex-row gap-6 p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
+    <div className="flex flex-col xl:flex-row gap-6 p-6 bg-white rounded-2xl shadow-sm border border-gray-200 relative overflow-hidden">
       {/* Patient Info Sidebar */}
       <div className="w-full xl:w-56 flex-shrink-0 flex xl:flex-col gap-4 items-center xl:items-start border-b xl:border-b-0 xl:border-r border-gray-100 pb-4 xl:pb-0 xl:pr-6">
         <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center text-xl font-bold text-gray-400 flex-shrink-0">
@@ -43,11 +45,17 @@ export const PatientRow = ({ patient, filterOptions }: PatientRowProps) => {
           </div>
         )}
         
-        {/* Error Overlay */}
+        {/* Error Overlay with User-friendly Retry Mechanism */}
         {error && (
           <div className="absolute inset-0 bg-red-50/95 flex flex-col gap-2 items-center justify-center z-10 rounded-r-xl text-red-700 border border-red-100 p-4 text-center">
              <span className="font-bold text-base">Failed to sync tasks</span>
              <span className="text-sm opacity-90 max-w-[80%]">{error?.message || 'Network error'}</span>
+             <button 
+               onClick={() => refetch()}
+               className="px-4 py-1.5 mt-2 bg-red-100 border border-red-200 text-red-800 hover:bg-red-200 rounded-lg text-xs font-bold transition shadow-sm"
+             >
+               Retry
+             </button>
           </div>
         )}
 

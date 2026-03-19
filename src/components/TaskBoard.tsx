@@ -5,7 +5,8 @@ import { Filters } from './Filters';
 import { TimeFilter, RoleFilter } from '../utils/filterTasks';
 
 export const TaskBoard = () => {
-  const { data: patients, isLoading, error } = usePatients();
+  // Destructure refetch to enable manual retry functionality
+  const { data: patients, isLoading, error, refetch } = usePatients();
   
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
@@ -21,10 +22,19 @@ export const TaskBoard = () => {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-xl flex flex-col gap-2">
-        <h3 className="font-bold text-lg">Error loading patient data</h3>
-        <p>{error?.message || 'An unknown network error occurred.'}</p>
-        <p className="text-sm mt-2 opacity-80">Our mock backend has an intentional 20% failure rate. React Query tried 3 times before failing completely!</p>
+      <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-xl flex flex-col gap-4 items-start">
+        <div>
+          <h3 className="font-bold text-lg">Error loading patient data</h3>
+          <p>{error?.message || 'An unknown network error occurred.'}</p>
+          <p className="text-sm mt-1 opacity-80">Our mock backend has an intentional 20% failure rate.</p>
+        </div>
+        {/* User-friendly Retry Button */}
+        <button 
+          onClick={() => refetch()}
+          className="px-5 py-2.5 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-700 transition shadow-sm"
+        >
+          Retry Connection
+        </button>
       </div>
     );
   }
@@ -52,13 +62,18 @@ export const TaskBoard = () => {
       />
 
       <div className="flex flex-col gap-8">
-        {patients?.map(patient => (
-          <PatientRow
-            key={patient?.id}
-            patient={patient}
-            filterOptions={{ time: timeFilter, role: roleFilter }}
-          />
-        ))}
+        {/* Map over patients robustly with optional chaining */}
+        {patients?.map(patient => {
+          if (!patient?.id) return null; // Graceful fallback for completely malformed patient objects
+          
+          return (
+            <PatientRow
+              key={patient.id}
+              patient={patient}
+              filterOptions={{ time: timeFilter, role: roleFilter }}
+            />
+          );
+        })}
       </div>
     </div>
   );
