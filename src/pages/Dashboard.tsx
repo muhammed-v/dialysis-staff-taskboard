@@ -1,7 +1,9 @@
+import { TaskBoard } from '../components/TaskBoard'
+
 export default function Dashboard() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+    <div className="min-h-screen bg-gray-50/50 p-6 md:p-8 w-full max-w-[1600px] mx-auto">
+      <TaskBoard />
     </div>
   )
 }
