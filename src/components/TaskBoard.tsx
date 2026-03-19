@@ -1,34 +1,36 @@
 import { PatientRow } from './PatientRow';
-import { Patient, Task } from '../types';
-
-
-// DUMMY DATA FOR INITIAL LAYOUT TESTING
-
-const dummyPatients: Patient[] = [
-  { id: '1', name: 'James Wilson', age: 45 },
-  { id: '2', name: 'Sarah Miller', age: 62 },
-];
-
-const dummyTasks: Task[] = [
-  {
-    id: 't1', patientId: '1', title: 'Administer Epogen exactly at 10:00 AM', role: 'nurse', status: 'todo',
-    dueDate: new Date(Date.now() + 86400000).toISOString(), createdAt: new Date().toISOString()
-  },
-  {
-    id: 't2', patientId: '1', title: 'Review weekly potassium levels', role: 'dietician', status: 'in_progress',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 't3', patientId: '2', title: 'Verify transportation for Tuesday', role: 'social_worker', status: 'completed',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 't4', patientId: '2', title: 'Check vitals post-dialysis', role: 'nurse', status: 'todo',
-    createdAt: new Date().toISOString()
-  },
-];
+import { usePatients } from '../hooks/usePatients';
 
 export const TaskBoard = () => {
+  const { data: patients, isLoading, error } = usePatients();
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-6 p-12 items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <p className="text-gray-500 font-medium mt-4">Loading patients...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-xl flex flex-col gap-2">
+        <h3 className="font-bold text-lg">Error loading patient data</h3>
+        <p>{error?.message || 'An unknown network error occurred.'}</p>
+        <p className="text-sm mt-2 opacity-80">Our mock backend has an intentional 20% failure rate. React Query tried 3 times before failing completely!</p>
+      </div>
+    );
+  }
+
+  if (!patients || patients.length === 0) {
+    return (
+      <div className="border-2 border-dashed border-gray-200 p-12 rounded-2xl flex flex-col items-center justify-center text-gray-500">
+        <p className="font-medium text-lg">No patients found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1 mb-2">
@@ -37,11 +39,10 @@ export const TaskBoard = () => {
       </div>
 
       <div className="flex flex-col gap-8">
-        {dummyPatients.map(patient => (
+        {patients?.map(patient => (
           <PatientRow
-            key={patient.id}
+            key={patient?.id}
             patient={patient}
-            tasks={dummyTasks.filter(t => t.patientId === patient.id)}
           />
         ))}
       </div>
