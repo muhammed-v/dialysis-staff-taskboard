@@ -1,4 +1,4 @@
-import { Patient, Task, Role, TaskStatus } from '../types';
+import { Patient, Task } from '../types';
 
 // Mock in-memory database
 let patients: Patient[] = [

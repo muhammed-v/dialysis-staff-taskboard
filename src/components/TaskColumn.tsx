@@ -4,10 +4,10 @@ import { TaskCard } from './TaskCard';
 interface TaskColumnProps {
   status: TaskStatus;
   tasks: Task[];
+  patientId: string;
 }
 
-export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
-  // Graceful robust dictionary lookup with fallback
+export const TaskColumn = ({ status, tasks, patientId }: TaskColumnProps) => {
   const statusLabels: Record<TaskStatus, string> = {
     todo: 'To Do',
     in_progress: 'In Progress',
@@ -23,7 +23,6 @@ export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
   const label = statusLabels[status] || 'Unknown Status';
   const borderColor = borderColors[status] || 'border-l-gray-200';
 
-  // Ensure tasks array is robust against undefined mapping
   const safeTasks = Array.isArray(tasks) ? tasks : [];
 
   return (
@@ -37,8 +36,7 @@ export const TaskColumn = ({ status, tasks }: TaskColumnProps) => {
       
       <div className="flex flex-col gap-3 min-h-[120px]">
         {safeTasks.map((task, index) => (
-          // Use index fallback if task ID is missing
-          <TaskCard key={task?.id || `fallback-idx-${index}`} task={task} />
+          <TaskCard key={task?.id || `fallback-idx-${index}`} task={task} patientId={patientId} />
         ))}
         
         {safeTasks.length === 0 && (

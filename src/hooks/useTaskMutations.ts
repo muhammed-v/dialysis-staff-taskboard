@@ -11,13 +11,13 @@ export const useCreateTask = () => {
 
     // Structure for Future 
 
-    onMutate: async (newVariables) => {
+    onMutate: async (_newVariables) => {
 
     },
-    onError: (err, newVariables, context) => {
+    onError: (_err, _newVariables, _context) => {
 
     },
-    onSettled: (data, error, variables) => {
+    onSettled: (_data, _error, variables) => {
 
       queryClient.invalidateQueries({ queryKey: ['tasks', variables.patientId] });
     },
@@ -70,7 +70,7 @@ export const useUpdateTask = () => {
       // Show error message as requested
       alert(`Rollback applied. Failed to update task: ${err.message}`);
     },
-    onSettled: (data, error, variables) => {
+    onSettled: (_data, _error, variables) => {
       // Always resync with the server strictly as a final guarantee, regardless of success/fail
       queryClient.invalidateQueries({ queryKey: ['tasks', variables.patientId] });
     },
